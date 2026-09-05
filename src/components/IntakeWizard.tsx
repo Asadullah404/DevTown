@@ -96,7 +96,7 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
   }
 
   const buildSummaryText = () => {
-    return `*New Project Inquiry for Dev Studio*%0A%0A` +
+    return `*New Project Inquiry for DevTown*%0A%0A` +
       `*Project Type:* ${formData.projectType}%0A` +
       `*Features Needed:* ${formData.features.join(', ') || 'Standard package'}%0A` +
       `*Budget Range:* ${formData.budgetRange}%0A` +

@@ -5,6 +5,7 @@ import { Navbar } from '../components/Navbar'
 import { Hero3DExperience } from '../components/Hero3DExperience'
 import { ProjectsShowcase } from '../components/ProjectsShowcase'
 import { ServicesSection } from '../components/ServicesSection'
+import { SeoCapabilitiesSection } from '../components/SeoCapabilitiesSection'
 import { HowItWorks } from '../components/HowItWorks'
 import { TrustSection } from '../components/TrustSection'
 import { IntakeWizard } from '../components/IntakeWizard'
@@ -50,6 +51,9 @@ export default function Home() {
 
       {/* 6 Core Productized Services & Transparent Pricing */}
       <ServicesSection onSelectService={handleSelectService} />
+
+      {/* Extreme SEO Capabilities & Scalable Architecture Matrix */}
+      <SeoCapabilitiesSection onStartProject={scrollToQuote} />
 
       {/* Transparent 4-Step Process */}
       <HowItWorks onStartProject={scrollToQuote} />

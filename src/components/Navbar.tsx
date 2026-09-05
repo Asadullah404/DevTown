@@ -39,7 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onStartProject }) => {
                 DEV
               </span>
               <span className="text-base font-medium tracking-tight text-slate-400">
-                STUDIO
+                TOWN
               </span>
             </div>
             <p className="text-[10px] text-slate-500 font-mono tracking-wider uppercase mt-1">
@@ -61,6 +61,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onStartProject }) => {
             className="text-xs font-medium text-slate-300 hover:text-white transition-colors"
           >
             Services & Pricing
+          </a>
+          <a
+            href="#capabilities"
+            className="text-xs font-medium text-slate-300 hover:text-white transition-colors"
+          >
+            Capabilities & Scale
           </a>
           <a
             href="#process"
@@ -121,6 +127,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onStartProject }) => {
               className="px-3 py-2 text-sm font-medium text-slate-200 hover:bg-white/[0.05] rounded-lg"
             >
               Services & Pricing
+            </a>
+            <a
+              href="#capabilities"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-2 text-sm font-medium text-slate-200 hover:bg-white/[0.05] rounded-lg"
+            >
+              Capabilities & Scale
             </a>
             <a
               href="#process"

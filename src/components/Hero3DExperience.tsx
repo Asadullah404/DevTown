@@ -203,8 +203,8 @@ export const Hero3DExperience: React.FC<Hero3DExperienceProps> = ({
 
             {/* Subhead */}
             <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-400 font-normal leading-relaxed mb-8 px-2">
-              We turn business requirements into custom websites, web applications, AI chatbots, 
-              and automated workflows. Transparent fixed quotes, no hourly bidding, and rapid delivery.
+              We build, automate, and scale custom web applications, high-performance websites, AI chatbots, 
+              and cloud workflows. Transparent fixed quotes, zero hourly billing creep, and rapid 3–14 day delivery.
             </p>
 
             {/* Dual CTAs - Tactile Pure White + Charcoal Glass */}

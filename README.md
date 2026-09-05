@@ -1,4 +1,4 @@
-# Dev Studio — 3D Interactive Web & AI Engineering Studio
+# DevTown — 3D Interactive Web & AI Engineering Studio (devtown.live)
 
 > A high-performance, productized AI engineering portfolio and client intake engine built with **Next.js 14 App Router**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**. Features a frame-accurate 3D scroll-scrubbed canvas experience and an Apple/Linear-inspired dark aesthetic.
 
@@ -30,8 +30,8 @@
 ### 1. Clone & Install Dependencies
 
 ```bash
-git clone https://github.com/Asadullah404/Dev_Studio.git
-cd Dev_Studio
+git clone https://github.com/Asadullah404/DevTown.git
+cd DevTown
 npm install
 ```
 
