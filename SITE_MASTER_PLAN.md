@@ -62,7 +62,7 @@ flowchart TD
 ### Detailed Section Breakdown
 
 #### 1. Header / Navbar
-* **Logo:** Modern badge (e.g. *Apex Digital Studio* or *NovaCraft AI*).
+* **Logo:** Modern badge (e.g. *Dev Studio*).
 * **Navigation Links:** Services, How It Works, Demos, Pricing, FAQ.
 * **Header Action Button:** `[Start Your Project →]` with smooth scroll to the intake wizard.
 

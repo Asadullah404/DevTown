@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://apexstudio.dev/sitemap.xml',
+    sitemap: 'https://devstudio.dev/sitemap.xml',
   }
 }

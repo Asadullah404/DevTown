@@ -36,7 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onStartProject }) => {
           <div>
             <div className="flex items-center gap-1.5 leading-none">
               <span className="text-base font-bold tracking-tight text-white">
-                APEX
+                DEV
               </span>
               <span className="text-base font-medium tracking-tight text-slate-400">
                 STUDIO

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Apex Studio — Custom Websites, Web Applications & AI Automation',
+  title: 'Dev Studio — Custom Websites, Web Applications & AI Automation',
   description:
     'Turn your business idea into working software. High-performance websites, custom web apps, AI chatbots, and automated workflows with fixed-price quotes and fast delivery.',
   keywords: [
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     'AI chatbot integration',
     'Hostinger web app deployment',
   ],
-  authors: [{ name: 'Apex Studio' }],
-  creator: 'Apex Studio',
-  publisher: 'Apex Studio',
+  authors: [{ name: 'Dev Studio' }],
+  creator: 'Dev Studio',
+  publisher: 'Dev Studio',
   robots: {
     index: true,
     follow: true,
@@ -32,15 +32,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://apexstudio.dev',
-    title: 'Apex Studio — Custom Websites, Web Applications & AI Automation',
+    url: 'https://devstudio.dev',
+    title: 'Dev Studio — Custom Websites, Web Applications & AI Automation',
     description:
       'Turn your business idea into working software. High-performance websites, custom web apps, AI chatbots, and automated workflows with fixed-price quotes.',
-    siteName: 'Apex Studio',
+    siteName: 'Dev Studio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Apex Studio — Custom Websites, Web Applications & AI Automation',
+    title: 'Dev Studio — Custom Websites, Web Applications & AI Automation',
     description:
       'Turn your business idea into working software. High-performance websites, custom web apps, AI chatbots, and automated workflows.',
   },
@@ -54,8 +54,8 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
-    name: 'Apex Studio',
-    image: 'https://apexstudio.dev/favicon.svg',
+    name: 'Dev Studio',
+    image: 'https://devstudio.dev/favicon.svg',
     description:
       'Productized software studio building custom websites, web applications, AI chatbots, and business automation workflows with fixed-price quotes.',
     priceRange: '$$',

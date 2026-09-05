@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-1.5 leading-none">
                 <span className="text-base font-bold tracking-tight text-white">
-                  APEX
+                  DEV
                 </span>
                 <span className="text-base font-medium tracking-tight text-slate-400">
                   STUDIO
@@ -97,7 +97,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-mono">
-          <p>© {new Date().getFullYear()} Apex Studio. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Dev Studio. All rights reserved.</p>
           <div className="flex items-center gap-2">
             <span>Built with Next.js, React & TypeScript</span>
             <span className="w-1 h-1 rounded-full bg-slate-700" />
