@@ -9,7 +9,9 @@ import {
   CheckCircle2, 
   Clock, 
   DollarSign,
-  ExternalLink
+  ExternalLink,
+  Loader2,
+  AlertCircle
 } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
@@ -17,12 +19,19 @@ interface IntakeWizardProps {
   initialProjectType?: string
 }
 
+// Configurable Formspree Endpoint: set NEXT_PUBLIC_FORMSPREE_ENDPOINT in .env.local
+// or replace the fallback endpoint below with your Formspree Form ID (e.g., https://formspree.io/f/YOUR_ID)
+const FORMSPREE_ENDPOINT = 
+  process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || 'https://formspree.io/f/mgaelodz'
+
 const PRIMARY_EMAIL = 'm.asadullah.10.0.0.01@gmail.com'
 const WHATSAPP_NUMBER = '923022111051'
 
 export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType = '' }) => {
   const [step, setStep] = useState<number>(1)
   const [submitted, setSubmitted] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   // Form State
   const [formData, setFormData] = useState<ProjectInquiry>({
@@ -136,45 +145,88 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
       `*Client WhatsApp:* ${formData.whatsapp || 'Not provided'}`
   }
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.name || !formData.email) {
-      alert('Please enter your name and email address')
-      return
+  const submitToFormspree = async () => {
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      whatsapp: formData.whatsapp || 'Not provided',
+      projectType: formData.projectType,
+      budgetRange: formData.budgetRange,
+      timeline: formData.timeline,
+      features: formData.features.join(', ') || 'Standard Scope',
+      description: formData.description || 'Details to be discussed',
+      _replyto: formData.email,
+      _subject: `New DevTown Lead: ${formData.projectType} from ${formData.name}`,
     }
 
-    setSubmitted(true)
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
+    return await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(payload),
     })
-
-    const subject = encodeURIComponent(buildEmailSubject())
-    const body = encodeURIComponent(buildEmailBody())
-    const mailtoUrl = `mailto:${PRIMARY_EMAIL}?subject=${subject}&body=${body}`
-    
-    // Automatically trigger mail client
-    window.location.href = mailtoUrl
   }
 
-  const handleWhatsAppSubmit = (e: React.FormEvent) => {
+  const handleFormspreeSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.name || !formData.email) {
       alert('Please enter your name and email address')
       return
     }
 
-    setSubmitted(true)
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-    })
+    setIsSubmitting(true)
+    setErrorMessage(null)
 
-    const message = buildWhatsAppText()
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`
-    window.open(whatsappUrl, '_blank')
+    try {
+      const response = await submitToFormspree()
+      if (response.ok) {
+        setSubmitted(true)
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+        })
+      } else {
+        const data = await response.json().catch(() => ({}))
+        const errorMsg = data.errors?.map((err: any) => err.message).join(', ') || data.error || 'Failed to submit inquiry to Formspree. Please verify your Form ID.'
+        setErrorMessage(errorMsg)
+      }
+    } catch (err: any) {
+      console.error('Formspree dispatch error:', err)
+      setErrorMessage(err?.message || 'Network error connecting to Formspree.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleWhatsAppSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!formData.name || !formData.email) {
+      alert('Please enter your name and email address')
+      return
+    }
+
+    setIsSubmitting(true)
+    // Send to Formspree in background so lead is always archived in Formspree dashboard
+    try {
+      await submitToFormspree()
+    } catch (err) {
+      console.warn('Background Formspree dispatch:', err)
+    } finally {
+      setIsSubmitting(false)
+      setSubmitted(true)
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+      })
+
+      const message = buildWhatsAppText()
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`
+      window.open(whatsappUrl, '_blank')
+    }
   }
 
   const getGmailWebUrl = () => {
@@ -236,10 +288,11 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                 <CheckCircle2 className="w-7 h-7 text-emerald-400" />
               </div>
               <h3 className="text-2xl font-extrabold text-white mb-3">
-                Inquiry Ready & Addressed!
+                Inquiry Sent to Formspree!
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed mb-6">
-                Thank you, <strong>{formData.name}</strong>. Your project details have been formulated for direct delivery to <strong className="text-white">{PRIMARY_EMAIL}</strong>.
+                Thank you, <strong>{formData.name}</strong>. Your project specifications have been submitted via Formspree and recorded directly. 
+                We are reviewing your requirements and will reply with a detailed roadmap and fixed quote within 24 hours.
               </p>
 
               {/* Direct Quick-Action Buttons */}
@@ -490,6 +543,17 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                         />
                       </div>
                     </div>
+
+                    {errorMessage && (
+                      <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-start gap-2.5 mt-4">
+                        <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
+                        <div>
+                          <p className="font-semibold text-rose-200">Formspree Notice:</p>
+                          <p className="text-slate-300 mt-0.5">{errorMessage}</p>
+                          <p className="text-slate-400 mt-1">You can also click "Send Direct via WhatsApp" below to reach us immediately.</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -500,7 +564,8 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="px-5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] flex items-center gap-1.5 transition-all duration-150"
+                    disabled={isSubmitting}
+                    className="px-5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] flex items-center gap-1.5 transition-all duration-150 disabled:opacity-50"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Back</span>
@@ -523,19 +588,29 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                     <button
                       type="button"
                       onClick={handleWhatsAppSubmit}
-                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-[#25d366] hover:bg-[#20bd5a] transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_2px_8px_rgba(37,211,102,0.25)] flex items-center justify-center gap-2 active:translate-y-0.5"
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-[#25d366] hover:bg-[#20bd5a] transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_2px_8px_rgba(37,211,102,0.25)] flex items-center justify-center gap-2 active:translate-y-0.5 disabled:opacity-60"
                     >
-                      <MessageSquare className="w-4 h-4" />
+                      {isSubmitting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <MessageSquare className="w-4 h-4" />
+                      )}
                       <span>Send Direct via WhatsApp</span>
                     </button>
 
                     <button
                       type="button"
-                      onClick={handleEmailSubmit}
-                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-white hover:bg-slate-100 transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),0_1px_2px_rgba(0,0,0,0.4)] flex items-center justify-center gap-2 active:translate-y-0.5"
+                      onClick={handleFormspreeSubmit}
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-white hover:bg-slate-100 transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),0_1px_2px_rgba(0,0,0,0.4)] flex items-center justify-center gap-2 active:translate-y-0.5 disabled:opacity-60"
                     >
-                      <Mail className="w-4 h-4" />
-                      <span>Send Inquiry via Email</span>
+                      {isSubmitting ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                      ) : (
+                        <Mail className="w-4 h-4" />
+                      )}
+                      <span>Submit Inquiry (Formspree)</span>
                     </button>
                   </div>
                 )}
