@@ -36,7 +36,7 @@ export const Footer: React.FC = () => {
                 <Github className="w-4 h-4" />
               </a>
               <a
-                href="mailto:onlyarmor123isallowed@gmail.com"
+                href="mailto:muhammad.asadullah.suhail@gmail.com"
                 className="p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-400 hover:text-white transition-colors"
                 title="Email Inquiry"
               >
