@@ -242,10 +242,10 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                 <CheckCircle2 className="w-7 h-7 text-emerald-400" />
               </div>
               <h3 className="text-2xl font-extrabold text-white mb-3">
-                Inquiry Sent to Formspree!
+                Inquiry Sent Successfully!
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed mb-6">
-                Thank you, <strong>{formData.name}</strong>. Your project specifications have been submitted via Formspree and recorded directly. 
+                Thank you, <strong>{formData.name}</strong>. Your project specifications have been received and recorded directly. 
                 We are reviewing your requirements and will reply to <strong className="text-white">{formData.email}</strong> within 24 hours.
               </p>
 
@@ -584,7 +584,7 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                       ) : (
                         <Mail className="w-4 h-4" />
                       )}
-                      <span>Submit Inquiry (Formspree)</span>
+                      <span>Submit Inquiry</span>
                     </button>
                   </div>
                 )}
