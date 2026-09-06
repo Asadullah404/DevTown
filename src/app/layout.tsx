@@ -181,7 +181,7 @@ export default function RootLayout({
           'Productized software studio building custom websites, scalable web applications, AI chatbots, and business automation workflows with guaranteed fixed-price quotes.',
         priceRange: '$175 - $1200',
         openingHours: 'Mo-Su 00:00-24:00',
-        telephone: '+923000000000',
+        telephone: '+923022111051',
         email: 'onlyarmor123isallowed@gmail.com',
         founder: {
           '@type': 'Person',

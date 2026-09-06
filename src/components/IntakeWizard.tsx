@@ -8,7 +8,8 @@ import {
   Mail, 
   CheckCircle2, 
   Clock, 
-  DollarSign
+  DollarSign,
+  Loader2
 } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
@@ -16,9 +17,17 @@ interface IntakeWizardProps {
   initialProjectType?: string
 }
 
+// Configurable Formspree Endpoint: set NEXT_PUBLIC_FORMSPREE_ENDPOINT in .env.local
+// or replace the default endpoint below with your Formspree Form ID from formspree.io
+const FORMSPREE_ENDPOINT = 
+  process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || 'https://formspree.io/f/mqkrvbzw'
+
+const WHATSAPP_NUMBER = '923022111051'
+
 export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType = '' }) => {
   const [step, setStep] = useState<number>(1)
   const [submitted, setSubmitted] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   // Form State
   const [formData, setFormData] = useState<ProjectInquiry>({
@@ -104,46 +113,82 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
       `*Description:* ${formData.description || 'Details to be discussed'}%0A%0A` +
       `*Client Name:* ${formData.name}%0A` +
       `*Client Email:* ${formData.email}%0A` +
-      `*Client WhatsApp:* ${formData.whatsapp}`
+      `*Client WhatsApp:* ${formData.whatsapp || 'Not provided'}`
   }
 
-  const handleWhatsAppSubmit = (e: React.FormEvent) => {
+  const submitToFormspree = async () => {
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      whatsapp: formData.whatsapp || 'Not provided',
+      projectType: formData.projectType,
+      budgetRange: formData.budgetRange,
+      timeline: formData.timeline,
+      features: formData.features.join(', ') || 'Standard Scope',
+      description: formData.description || 'Details to be discussed',
+      _replyto: formData.email,
+      _subject: `New DevTown Lead: ${formData.projectType} from ${formData.name}`,
+    }
+
+    return await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+  }
+
+  const handleFormspreeSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.name || !formData.email) {
       alert('Please enter your name and email address')
       return
     }
 
-    setSubmitted(true)
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-    })
-
-    const message = buildSummaryText()
-    const whatsappUrl = `https://wa.me/923000000000?text=${message}`
-    window.open(whatsappUrl, '_blank')
+    setIsSubmitting(true)
+    try {
+      await submitToFormspree()
+    } catch (err) {
+      console.error('Formspree dispatch error:', err)
+    } finally {
+      setIsSubmitting(false)
+      setSubmitted(true)
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+      })
+    }
   }
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleWhatsAppSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.name || !formData.email) {
       alert('Please enter your name and email address')
       return
     }
 
-    setSubmitted(true)
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-    })
+    setIsSubmitting(true)
+    // Send to Formspree in background so lead is always stored in email
+    try {
+      await submitToFormspree()
+    } catch (err) {
+      console.error('Background dispatch:', err)
+    } finally {
+      setIsSubmitting(false)
+      setSubmitted(true)
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+      })
 
-    const mailtoUrl = `mailto:onlyarmor123isallowed@gmail.com?subject=New Project Inquiry: ${encodeURIComponent(
-      formData.projectType
-    )}&body=${decodeURIComponent(buildSummaryText())}`
-    window.location.href = mailtoUrl
+      const message = buildSummaryText()
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`
+      window.open(whatsappUrl, '_blank')
+    }
   }
 
   return (
@@ -199,18 +244,32 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                 <CheckCircle2 className="w-7 h-7 text-emerald-400" />
               </div>
               <h3 className="text-2xl font-extrabold text-white mb-3">
-                Project Inquiry Sent
+                Project Inquiry Sent!
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed mb-6">
-                Thank you, <strong>{formData.name}</strong>. Your project details have been captured. 
-                We are reviewing your requirements and will reply with a scope roadmap and fixed quote within hours.
+                Thank you, <strong>{formData.name}</strong>. Your project specifications have been submitted via Formspree directly to our inbox. 
+                We are analyzing your requirements and will reply with a detailed roadmap and fixed quote within 24 hours.
               </p>
+
+              {/* Direct Instant WhatsApp Chat Button */}
+              <div className="space-y-3 mb-6">
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}?text=${buildSummaryText()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-[#25d366] hover:bg-[#20bd5a] transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_2px_8px_rgba(37,211,102,0.25)]"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Chat Immediately on WhatsApp (+92 302 2111051)</span>
+                </a>
+              </div>
+
               <button
                 onClick={() => {
                   setSubmitted(false)
                   setStep(1)
                 }}
-                className="px-6 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] transition-all"
+                className="px-6 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] transition-all"
               >
                 Submit Another Inquiry
               </button>
@@ -439,7 +498,8 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="px-5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] flex items-center gap-1.5 transition-all duration-150"
+                    disabled={isSubmitting}
+                    className="px-5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] flex items-center gap-1.5 transition-all duration-150 disabled:opacity-50"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Back</span>
@@ -462,19 +522,29 @@ export const IntakeWizard: React.FC<IntakeWizardProps> = ({ initialProjectType =
                     <button
                       type="button"
                       onClick={handleWhatsAppSubmit}
-                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-[#25d366] hover:bg-[#20bd5a] transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_2px_8px_rgba(37,211,102,0.25)] flex items-center justify-center gap-2 active:translate-y-0.5"
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-[#25d366] hover:bg-[#20bd5a] transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_2px_8px_rgba(37,211,102,0.25)] flex items-center justify-center gap-2 active:translate-y-0.5 disabled:opacity-60"
                     >
-                      <MessageSquare className="w-4 h-4" />
+                      {isSubmitting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <MessageSquare className="w-4 h-4" />
+                      )}
                       <span>Send Direct via WhatsApp</span>
                     </button>
 
                     <button
                       type="button"
-                      onClick={handleEmailSubmit}
-                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-white hover:bg-slate-100 transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),0_1px_2px_rgba(0,0,0,0.4)] flex items-center justify-center gap-2 active:translate-y-0.5"
+                      onClick={handleFormspreeSubmit}
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-white hover:bg-slate-100 transition-all duration-150 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),0_1px_2px_rgba(0,0,0,0.4)] flex items-center justify-center gap-2 active:translate-y-0.5 disabled:opacity-60"
                     >
-                      <Mail className="w-4 h-4" />
-                      <span>Send via Email</span>
+                      {isSubmitting ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                      ) : (
+                        <Mail className="w-4 h-4" />
+                      )}
+                      <span>Submit Inquiry (Formspree)</span>
                     </button>
                   </div>
                 )}

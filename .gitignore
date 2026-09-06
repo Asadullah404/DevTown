@@ -12,6 +12,9 @@
 # Internal agent cache
 .agents/
 
+# Local Environment Variables
+.env*.local
+
 # Logs
 logs
 *.log

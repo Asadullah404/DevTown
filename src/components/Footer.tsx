@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sparkles, Github, Mail } from 'lucide-react'
+import { Sparkles, Github, Mail, MessageSquare } from 'lucide-react'
 
 export const Footer: React.FC = () => {
   return (
@@ -41,6 +41,15 @@ export const Footer: React.FC = () => {
                 title="Email Inquiry"
               >
                 <Mail className="w-4 h-4" />
+              </a>
+              <a
+                href="https://wa.me/923022111051"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-xl bg-white/[0.04] hover:bg-emerald-500/10 border border-white/[0.08] hover:border-emerald-500/30 text-slate-400 hover:text-emerald-400 transition-colors"
+                title="Chat on WhatsApp (+92 302 2111051)"
+              >
+                <MessageSquare className="w-4 h-4" />
               </a>
             </div>
           </div>
