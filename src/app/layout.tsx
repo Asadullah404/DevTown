@@ -182,7 +182,7 @@ export default function RootLayout({
         priceRange: '$175 - $1200',
         openingHours: 'Mo-Su 00:00-24:00',
         telephone: '+923022111051',
-        email: 'muhammad.asadullah.suhail@gmail.com',
+        email: 'm.asadullah.10.0.0.01@gmail.com',
         founder: {
           '@type': 'Person',
           name: 'Asadullah',
