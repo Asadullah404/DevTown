@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muhammad Asadullah Sohail — AI Engineer & Full-Stack Developer</title>
+  <meta name="title" content="Muhammad Asadullah Sohail — 3D AI Workstation Portfolio">
+  <meta name="description" content="Interactive 3D modern workstation showcasing Muhammad Asadullah Sohail's AI engineering, computer vision projects, full-stack systems, and resume inside an interactive Windows 11 desktop.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #f5f3ed;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      user-select: none;
+    }
+    #css {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: auto;
+    }
+    #webgl {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+    #overlay {
+      display: none;
+    }
+    #ui-interactive {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    #ui {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+    #ui-app {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div id="css"></div>
+  <div id="webgl"></div>
+  <div id="overlay"></div>
+  <div id="ui-interactive"></div>
+  <div id="ui"></div>
+
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
+

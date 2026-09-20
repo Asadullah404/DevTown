@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modern Workstation Styling */
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #f5f3ed;
+  color: #1e293b;
+}
+
+/* Subtle Screen Glow */
+.screen-frame {
+  box-shadow: 0 0 45px rgba(56, 189, 248, 0.18), 0 0 100px rgba(99, 102, 241, 0.12);
+  border-radius: 4px;
+}
+
+/* Modern Blinking Cursor */
+.modern-blinking-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background-color: #38bdf8;
+  vertical-align: text-bottom;
+  animation: modern-blink 0.8s infinite;
+}
+
+@keyframes modern-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Futuristic Scanline Effect */
+.modern-scanlines {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%,
+    rgba(0, 0, 0, 0.25)
+  );
+  background-size: 100% 4px;
+}
+
